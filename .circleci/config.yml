@@ -115,7 +115,7 @@ jobs:
           name: Scanning frontend
           working_directory: ./frontend
           command: | 
-            npm audit fix --audit-level=critical
+            npm audit --audit-level=critical
 
   scan-backend:
     << : *nodeimg
@@ -127,7 +127,7 @@ jobs:
         name: Scanning backend
         working_directory: ./backend
         command: |   
-          npm audit fix --audit-level=critial
+          npm audit --audit-level=critial
 
   # deploy-infrastructure:
   #   << : *awsimg
