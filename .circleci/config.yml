@@ -89,9 +89,8 @@ jobs:
           at: .
       - run:
           name: Testing frontend
+          working_directory: ./frontend
           command: |
-            cd frontend
-            npm install
             npm run test
                 
   test-backend:
@@ -102,38 +101,33 @@ jobs:
           at: .
       - run:
           name: Testing backend
+          working_directory: ./backend
           command: | 
-            cd backend
-            npm install
             npm run test
             
-  # scan-frontend:
-  #   << : *nodeimg
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         keys:
-  #           - build-frontend
-  #     - run:
-  #         name: Scanning frontend
-  #         command: | 
-  #           cd frontend
-  #           npm install
-  #           npm audit fix --audit-level=critical --force
+  scan-frontend:
+    << : *nodeimg
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Scanning frontend
+          working_directory: ./frontend
+          command: | 
+            npm audit fix --audit-level=critical
 
-  # scan-backend:
-  #   << : *nodeimg
-  #   steps:
-  #   - checkout
-  #   - restore_cache:
-  #       keys:
-  #         - build-backend
-  #   - run:
-  #       name: Scanning backend
-  #       command: |   
-  #         cd backend
-  #         npm install
-  #         npm audit fix --audit-level=critial --
+  scan-backend:
+    << : *nodeimg
+    steps:
+    - checkout
+    - attach_workspace:
+        at: .
+    - run:
+        name: Scanning backend
+        working_directory: ./backend
+        command: |   
+          npm audit fix --audit-level=critial
 
   # deploy-infrastructure:
   #   << : *awsimg
@@ -326,10 +320,10 @@ workflows:
           requires: [build-frontend]
       - test-backend:
           requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
