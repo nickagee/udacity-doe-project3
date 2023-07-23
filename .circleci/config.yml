@@ -115,6 +115,7 @@ jobs:
           working_directory: ./frontend
           command: | 
             ls -la
+            pwd
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
 
@@ -129,6 +130,7 @@ jobs:
         working_directory: ./backend
         command: | 
             ls -la  
+            pwd
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
   # deploy-infrastructure:
