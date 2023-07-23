@@ -54,14 +54,13 @@ jobs:
       - checkout
       - run:
           name: Front-end install
-          working_directory: ./frontend
           command: |
+            cd frontend
             npm install
             ls -ls
       - persist_to_workspace:
           root: .
           paths: 
-            - "."
             - "./frontend/node_modules"
 
   install-backend:
@@ -70,14 +69,14 @@ jobs:
       - checkout
       - run:
           name: Back-end install 
-          working_directory: ./backend
           command: |
+            cd backend
             npm install
             ls -la
       - persist_to_workspace:
           root: .
           paths: 
-            - "."
+            - "./backend/node_modules"
 
   build-frontend:
     << : *nodeimg
@@ -87,9 +86,9 @@ jobs:
           at: .
       - run:
           name: Front-end build
-          working_directory: ./frontend
           command: |
             ls -la
+            cd frontend
             ls -ls ../
             npm run build
       - persist_to_workspace:
@@ -105,9 +104,9 @@ jobs:
           at: .
       - run:
           name: Back-end build
-          working_directory: ./frontend
           command: |
             ls -la
+            cd backend
             ls -la ../
             npm run build
       - persist_to_workspace:
@@ -123,13 +122,9 @@ jobs:
           at: .
       - run:
           name: Testing frontend
-          working_directory: ./frontend
           command: |
+            cd frontend
             npm run test
-      - persist_to_workspace:
-          root: .
-          paths:
-            - "."
                 
   test-backend:
     << : *nodeimg
@@ -139,13 +134,9 @@ jobs:
           at: .
       - run:
           name: Testing backend
-          working_directory: ./backend
           command: | 
+            cd backend
             npm run test
-      - persist_to_workspace:
-          root: .
-          paths:
-            - "."
             
   scan-frontend:
     << : *nodeimg
