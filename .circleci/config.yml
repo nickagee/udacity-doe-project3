@@ -48,37 +48,61 @@ nodeimg: &nodeimg
 #             fi
             
 jobs:
+  install-frontend:
+    << : *nodeimg
+    steps:
+      - checkout
+      - run:
+          name: Front-end install
+          working_directory: ./frontend
+          command: |
+            npm install
+      - persist_to_workspace:
+          root: .
+          paths: 
+            - frontend/node_modules
+
+  install-backend:
+    << : *nodeimg
+    steps:
+      - checkout
+      - run:
+          name: Back-end install 
+          working_directory: ./backend
+          command: |
+            npm install
+      - persist_to_workspace:
+          root: .
+          paths: 
+            - backend/node_modules
+
   build-frontend:
     << : *nodeimg
     steps:
       - checkout
       - run:
-          name: Front-end install and build
+          name: Front-end build
           working_directory: ./frontend
           command: |
-            npm install
             npm run build
       - persist_to_workspace:
           root: .
-          paths:
+          paths: 
             - frontend/dist
-            - frontend/node_modules
-
+  
   build-backend:
     << : *nodeimg
     steps:
       - checkout
       - run:
-          name: Back-end install and build
-          working_directory: ./backend
+          name: Back-end build
+          working_directory: ./frontend
           command: |
-            npm install
             npm run build
       - persist_to_workspace:
           root: .
-          paths:
+          paths: 
             - backend/dist
-            - backend/node_modules
 
   test-frontend:
     << : *nodeimg
@@ -116,6 +140,7 @@ jobs:
           command: | 
             ls -la
             pwd
+            npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
 
@@ -131,6 +156,7 @@ jobs:
         command: | 
             ls -la  
             pwd
+            npm install
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
   # deploy-infrastructure:
