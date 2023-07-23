@@ -82,6 +82,8 @@ jobs:
     << : *nodeimg
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Front-end build
           working_directory: ./frontend
@@ -98,6 +100,8 @@ jobs:
     << : *nodeimg
     steps:
       - checkout
+      - attach_workspace:
+          at: .
       - run:
           name: Back-end build
           working_directory: ./frontend
@@ -121,6 +125,10 @@ jobs:
           working_directory: ./frontend
           command: |
             npm run test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - "."
                 
   test-backend:
     << : *nodeimg
@@ -133,6 +141,10 @@ jobs:
           working_directory: ./backend
           command: | 
             npm run test
+      - persist_to_workspace:
+          root: .
+          paths:
+            - "."
             
   scan-frontend:
     << : *nodeimg
