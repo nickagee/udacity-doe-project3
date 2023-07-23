@@ -60,7 +60,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: 
-            - frontend/node_modules
+            - "."
 
   install-backend:
     << : *nodeimg
@@ -74,7 +74,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: 
-            - backend/node_modules
+            - "."
 
   build-frontend:
     << : *nodeimg
@@ -88,7 +88,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: 
-            - frontend/dist
+            - "."
   
   build-backend:
     << : *nodeimg
@@ -102,7 +102,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths: 
-            - backend/dist
+            - "."
 
   test-frontend:
     << : *nodeimg
