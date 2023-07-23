@@ -150,7 +150,7 @@ jobs:
           command: | 
             ls -la
             pwd
-            npm install
+            npm audit fix --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
 
@@ -166,7 +166,7 @@ jobs:
         command: | 
             ls -la  
             pwd
-            npm install
+            npm audit fix --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
   # deploy-infrastructure:
