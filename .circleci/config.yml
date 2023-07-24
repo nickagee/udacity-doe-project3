@@ -9,6 +9,8 @@ version: 2.1
 nodeimg: &nodeimg
   docker:
     - image: cimg/node:13.8.0
+orbs:
+  slack: circleci/slack@4.12.5
 # commands:
 #   destroy-environment:
 #     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
@@ -58,6 +60,8 @@ jobs:
             cd frontend
             npm install
             ls -ls
+      - slack/notify:
+          event: "always"
       - persist_to_workspace:
           root: .
           paths: 
