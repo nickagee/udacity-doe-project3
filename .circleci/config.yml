@@ -70,8 +70,11 @@ jobs:
       - run:
           name: Back-end install 
           command: |
+            ls -la
+            pwd
             cd backend
             npm install
+            pwd
             ls -la
       - persist_to_workspace:
           root: .
