@@ -61,7 +61,7 @@ jobs:
             npm install
             ls -ls
       - slack/notify:
-          event: "always"
+          event: "fail"
       - persist_to_workspace:
           root: .
           paths: 
@@ -80,6 +80,8 @@ jobs:
             npm install
             pwd
             ls -la
+      - slack/notify:
+          event: "fail"
       - persist_to_workspace:
           root: .
           paths: 
@@ -98,6 +100,8 @@ jobs:
             cd frontend
             ls -ls ../
             npm run build
+      - slack/notify:
+          event: "fail"
       - persist_to_workspace:
           root: .
           paths: 
@@ -116,6 +120,8 @@ jobs:
             cd backend
             ls -la ../
             npm run build
+      - slack/notify:
+          event: "fail"
       - persist_to_workspace:
           root: .
           paths: 
@@ -132,6 +138,8 @@ jobs:
           command: |
             cd frontend
             npm run test
+      - slack/notify:
+          event: "fail"
                 
   test-backend:
     << : *nodeimg
@@ -144,7 +152,9 @@ jobs:
           command: | 
             cd backend
             npm run test
-            
+      - slack/notify:
+          event: "fail"
+
   scan-frontend:
     << : *nodeimg
     steps:
@@ -157,9 +167,10 @@ jobs:
           command: | 
             ls -la
             pwd
-            npm audit fix --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+      - slack/notify:
+          event: "fail"
 
   scan-backend:
     << : *nodeimg
@@ -176,6 +187,9 @@ jobs:
             npm audit fix --force
             npm audit fix --audit-level=critical --force
             npm audit --audit-level=critical
+    - slack/notify:
+        event: "fail"
+
   # deploy-infrastructure:
   #   << : *awsimg
   #   steps:
