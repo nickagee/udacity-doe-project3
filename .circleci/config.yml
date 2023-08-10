@@ -282,9 +282,9 @@ jobs:
       - run:
           name: Install dependencies
           command: |
-            apt-get update
-            apt-get install ansible -y
-            apt-get install awscli -y
+            apt update
+            apt-get -y install ansible
+            apt-get -y install awscli
       - run:
           name: Configure server
           command: |
