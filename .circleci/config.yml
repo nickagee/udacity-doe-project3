@@ -3,9 +3,9 @@ version: 2.1
 awsimg: &awsimg
   docker:
     - image: cimg/aws:2023.06
-# pyimg: &pyimg
-#   docker:
-#     - image: cimg/python:3.10.2
+pyimg: &pyimg
+  docker:
+    - image: cimg/python:3.10.2
 nodeimg: &nodeimg
   docker:
     - image: cimg/node:13.8.0
@@ -259,36 +259,39 @@ jobs:
           stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment:
           stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
-  # configure-infrastructure:
-  #   << : *pyimg
-  #   environment:
-  #     NODE_ENV: "production"
-  #     VERSION: "1"
-  #     ENVIRONMENT: "production"
-  #     TYPEORM_CONNECTION: $TYPEORM_CONNECTION
-  #     TYPEORM_HOST: $TYPEORM_HOST
-  #     TYPEORM_USERNAME: $TYPEORM_USERNAME
-  #     TYPEORM_PASSWORD: $TYPEORM_PASSWORD
-  #     TYPEORM_DATABASE: $TYPEORM_DATABASE
-  #     TYPEORM_PORT: $TYPEORM_PORT
-  #     TYPEORM_ENTITIES: $TYPEORM_ENTITIES
-  #   steps:
-  #     # Checkout code from git
-  #     - checkout
-
-  #     # Add ssh keys with fingerprint
-  #     # attach workspace
-  #     - run:
-  #         name: Install dependencies
-  #         command: |
-  #           # Your code here
-  #           exit 1
-  #     - run:
-  #         name: Configure server
-  #         command: |
-  #           # Your code here
-  #           exit 1
-  #     # Here's where you will add some code to rollback on failure      
+  
+  configure-infrastructure:
+    << : *pyimg
+    environment:
+      NODE_ENV: "production"
+      VERSION: "1"
+      ENVIRONMENT: "production"
+      TYPEORM_CONNECTION: $TYPEORM_CONNECTION
+      TYPEORM_HOST: $TYPEORM_HOST
+      TYPEORM_USERNAME: $TYPEORM_USERNAME
+      TYPEORM_PASSWORD: $TYPEORM_PASSWORD
+      TYPEORM_DATABASE: $TYPEORM_DATABASE
+      TYPEORM_PORT: $TYPEORM_PORT
+      TYPEORM_ENTITIES: $TYPEORM_ENTITIES
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["0a:ac:67:16:15:3d:4d:75:87:38:d5:7c:f5:cf:f3:86"]
+      - attach_workspace:
+          at: .
+      - run:
+          name: Install dependencies
+          command: |
+            apt-get update
+            apt-get install ansible -y
+            apt-get install awscli -y
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment:
+          stack-name: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
 
   # run-migrations:
   #   docker:
@@ -427,8 +430,8 @@ workflows:
           # filters:
           #   branches:
           #     only: [test-feature-branch]
-      # - configure-infrastructure:
-      #     requires: [deploy-infrastructure]
+      - configure-infrastructure:
+          requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
