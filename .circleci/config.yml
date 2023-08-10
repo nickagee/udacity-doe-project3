@@ -288,6 +288,17 @@ jobs:
 
   run-migrations:
     << : *nodeimg
+    environment:
+      NODE_ENV: "production"
+      VERSION: "1"
+      ENVIRONMENT: "production"
+      TYPEORM_CONNECTION: $TYPEORM_CONNECTION
+      TYPEORM_HOST: $TYPEORM_HOST
+      TYPEORM_USERNAME: $TYPEORM_USERNAME
+      TYPEORM_PASSWORD: $TYPEORM_PASSWORD
+      TYPEORM_DATABASE: $TYPEORM_DATABASE
+      TYPEORM_PORT: $TYPEORM_PORT
+      TYPEORM_ENTITIES: $TYPEORM_ENTITIES
     steps:
       - checkout
       - attach_workspace:
