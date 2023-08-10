@@ -293,6 +293,11 @@ jobs:
       - attach_workspace:
           at: .
       - run:
+          name: Install dependencies
+          command: |
+            sudo apt update
+            sudo apt -y install awscli
+      - run:
           name: Run migrations
           command: |
             cd backend
@@ -314,6 +319,7 @@ jobs:
       - destroy-environment:
           stack-name: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations
+  
   deploy-frontend:
     << : *pyimg
     steps:
@@ -350,21 +356,24 @@ jobs:
       - revert-migrations
                     
   # deploy-backend:
-  #   docker:
-  #     # Docker image here that supports Ansible
+  #   << : *pyimg
   #   steps:
-  #     # Checkout code from git
-  #     # Add ssh keys with fingerprint
-  #     # attach workspace
+  #     - checkout
+  #     - attach_workspace:
+  #         at: .
+  #     - add_ssh_keys:
+  #         fingerprints: ["0a:ac:67:16:15:3d:4d:75:87:38:d5:7c:f5:cf:f3:86"]
   #     - run:
   #         name: Install dependencies
   #         command: |
-  #           # your code here
+  #           sudo apt update
+  #           sudo apt-get -y install ansible
+  #           sudo apt-get -y install awscli
   #     - run:
   #         name: Deploy backend
   #         command: |
   #           # your code here
-  #     # Here's where you will add some code to rollback on failure  
+      # Here's where you will add some code to rollback on failure  
 
   # smoke-test:
   #   docker:
