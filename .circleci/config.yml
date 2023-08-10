@@ -5,7 +5,7 @@ awsimg: &awsimg
     - image: cimg/aws:2023.06
 pyimg: &pyimg
   docker:
-    - image: cimg/python:3.10.2
+    - image: cimg/python:3.11.4
 nodeimg: &nodeimg
   docker:
     - image: cimg/node:13.8.0
