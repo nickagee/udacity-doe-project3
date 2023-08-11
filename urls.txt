@@ -1,2 +1,2 @@
 URL01: https://github.com/nickagee/udacity-doe-project3
-URL02: 
+URL02: http://udapeople-7c6d20c.s3-website-us-east-1.amazonaws.com/
