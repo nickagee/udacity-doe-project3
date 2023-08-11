@@ -330,7 +330,7 @@ jobs:
       - slack/notify:
           event: "fail"  
   deploy-frontend:
-    << : *pyimg
+    << : *nodeimg
     steps:
       - checkout
       - attach_workspace:
