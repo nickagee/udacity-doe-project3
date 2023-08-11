@@ -252,6 +252,8 @@ jobs:
           stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment:
           stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - slack/notify:
+          event: "fail"
   
   configure-infrastructure:
     << : *pyimg
@@ -285,6 +287,8 @@ jobs:
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
           stack-name: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+      - slack/notify:
+          event: "fail"
 
   run-migrations:
     << : *nodeimg
@@ -304,22 +308,27 @@ jobs:
             npm install
             npm run build   
             npm run migrations > migrations_dump.txt
+            echo "migration done"
             cat migrations_dump.txt  
       - run:
           name: Send migration results to memstash
           command: |
+            echo "sending to kv"
             if grep "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
               curl https://kvdb.io/${KVDB_ID}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
-      - persist_to_workspace:
-          root: .
-          paths: 
-            - "./backend/migration_dump.txt"
+      # - persist_to_workspace:
+      #     root: .
+      #     paths: 
+      #       - "./backend/migration_dump.txt"
       - destroy-environment:
           stack-name: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
+      - destroy-environment:
+          stack-name: udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations
-  
+      - slack/notify:
+          event: "fail"  
   deploy-frontend:
     << : *pyimg
     steps:
@@ -347,13 +356,14 @@ jobs:
           command: |
             cd frontend
             npm install
-
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       - destroy-environment:
           stack-name: udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
       - revert-migrations
+      - slack/notify:
+          event: "fail"
                     
   # deploy-backend:
   #   << : *pyimg
