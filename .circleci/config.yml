@@ -406,7 +406,7 @@ jobs:
           event: "fail"
 
   smoke-test:
-    << : *nodeimg
+    << : *awsimg
     steps:
       - checkout
       - attach_workspace:
@@ -416,7 +416,6 @@ jobs:
           command: |
             sudo apt update
             sudo apt-get -y install curl
-            audo apt-get -y install awscli
       - run:
           name: Get backend url
           command: |
