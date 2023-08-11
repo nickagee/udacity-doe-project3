@@ -310,7 +310,7 @@ jobs:
           command: |
             if grep "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl https://kvdb.io/{KVDB_Bucket_Id}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl https://kvdb.io/${KVDB_ID}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - persist_to_workspace:
           root: .
