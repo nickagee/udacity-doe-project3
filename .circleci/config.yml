@@ -43,38 +43,6 @@ commands:
               npm install
               npm run migration:revert
             fi
-  # revert-migrations:
-  #   description: Revert the last migration
-  #   parameters:
-  #     workflow_id:
-  #         type: string      
-  #   steps:
-  #     - run:
-  #         name: Revert migrations
-  #         when: on_fail
-  #         command: |
-  #           STATUS=$(curl --insecure  https://kvdb.io/Sj1ZGcheHT6dsgnb9VhaLX/migration_<<parameters.workflow_id>>)
-  #           if (( $STATUS == 1 ));
-  #           then
-  #               cd ~/project/backend
-  #               npm install
-  #               npm run migration:revert
-  #           fi    
-# commands:
-#   destroy-environment:
-#     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
-#     parameters:
-#       # Add parameter here 
-#       workflow_id:
-#         type: string
-#     steps:
-#       - run:
-#           name: Destroy environments
-#           when: on_fail
-#           command: |
-#             # Your code here
-#             # exit 1
-#             aws cloudformation delete-stack --stack-name myStack-${CIRCLE_WORKFLOW_ID:0:5}
             
 jobs:
   install-frontend:
@@ -244,6 +212,7 @@ jobs:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt 
       - persist_to_workspace:
           root: ~/
           paths:
@@ -284,6 +253,7 @@ jobs:
           name: Configure server
           command: |
             cd .circleci/ansible
+            cat inventroy.txt
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
           stack-name: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
