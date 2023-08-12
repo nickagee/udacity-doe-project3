@@ -214,9 +214,9 @@ jobs:
             aws ec2 describe-instances --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
             cat .circleci/ansible/inventory.txt 
       - persist_to_workspace:
-          root: ~/
+          root: .circleci/ansible/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - inventory.txt
       - destroy-environment:
           stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment:
@@ -242,7 +242,7 @@ jobs:
       - add_ssh_keys:
           fingerprints: ["0a:ac:67:16:15:3d:4d:75:87:38:d5:7c:f5:cf:f3:86"]
       - attach_workspace:
-          at: .
+          at: .circleci/ansible/
       - run:
           name: Install dependencies
           command: |
