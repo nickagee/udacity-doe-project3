@@ -342,7 +342,7 @@ jobs:
           event: "fail"
                     
   deploy-backend:
-    << : *nodeimg
+    << : *pyimg
     steps:
       - checkout
       - attach_workspace:
@@ -353,6 +353,8 @@ jobs:
           name: Install dependencies
           command: |
             sudo apt update
+            sudo apt-get -y install nodejs
+            sudo apt-get -y install npm
             sudo apt-get -y install tar
             sudo apt-get -y install ansible
             sudo apt-get -y install awscli
@@ -371,6 +373,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cd .circleci/ansible
             cat inventory.txt
+            which python
             ansible-playbook -i inventory.txt deploy-backend.yml -vvv
       # - destroy-environment:
       #     stack-name: udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
