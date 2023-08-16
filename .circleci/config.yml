@@ -251,9 +251,11 @@ jobs:
             sudo apt-get -y install awscli
       - run:
           name: Configure server
+          no_output_timeout: 15m
           command: |
             cd .circleci/ansible
             cat inventory.txt
+            sleep 2m
             ansible-playbook -i inventory.txt configure-server.yml
       - destroy-environment:
           stack-name: udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
@@ -354,6 +356,7 @@ jobs:
             sudo apt-get -y install tar
             sudo apt-get -y install ansible
             sudo apt-get -y install awscli
+
       - run:
           name: Deploy backend
           command: |
@@ -368,7 +371,7 @@ jobs:
             echo "Contents  of the inventory.txt file is -------"
             cd .circleci/ansible
             cat inventory.txt
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            ansible-playbook -i inventory.txt deploy-backend.yml -vvv
       # - destroy-environment:
       #     stack-name: udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
       # - destroy-environment:
