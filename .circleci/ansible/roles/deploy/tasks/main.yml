@@ -47,13 +47,13 @@
     tar xvzf artifact.tar.gz -C .
     ls -la
 
-- name: Build
-  become: true
-  become_method: sudo
-  shell: |
-    cd /home/ubuntu/backend
-    npm install
-    npm run build
+# - name: Build
+#   become: true
+#   become_method: sudo
+#   shell: |
+#     cd /home/ubuntu/backend
+#     npm install
+#     npm run build
 
 - name: Start PM2
   become: true

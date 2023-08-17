@@ -373,7 +373,7 @@ jobs:
             cd .circleci/ansible
             cat inventory.txt
             which python
-            ansible-playbook -i inventory.txt deploy-backend.yml -vvv
+            ansible-playbook -i inventory.txt deploy-backend.yml
       # - destroy-environment:
       #     stack-name: udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
       # - destroy-environment:
